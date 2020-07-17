@@ -66,6 +66,7 @@ class ServiceNow_Connection():
             'state': 6,
             'resolution_code': 'closed/Resolved by Caller',
             'resolution_notes': f'{details["service"]} has been started, hence closing the incident',
+            'close_notes': f'{details["service"]} has been started, hence closing the incident'
         }
         incident_resource = self.get_incidentResource()
         incident_update = incident_resource.update(query={'number': incident_number}, payload=payload)

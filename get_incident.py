@@ -26,6 +26,12 @@ def get_ansible_parameters(server_name, problem_details, incident_number):
         details['type'] = "service"
         details['server_name'] = server_name.strip()
         details['incident_number'] = incident_number
+    elif "Apache" in problem_details:
+        details['service'] = "httpd"
+        details['type'] = "service"
+        details['server_name'] = server_name.strip()
+        details['incident_number'] = incident_number
+
     return details
 
 def run():
