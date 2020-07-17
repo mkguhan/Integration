@@ -12,6 +12,7 @@ from ansible import context
 import ansible.constants as C
 from ansible.utils.vars import load_extra_vars
 import pysnow
+from Connect_pysnow import ServiceNow_Connection
 
 from Ansible_Play import ansible_play
 
@@ -19,44 +20,21 @@ class ResultCallback(CallbackBase):
 
     def v2_runner_on_ok(self, result, **kwargs):
         host = result._host
-        self.output= json.dumps({host.name: result._result}, indent=4)
+        self.output= result._result
+        #json.dumps({host.name: result._result}, indent=4)
 
     def v2_runner_on_failed(self, result, **kwargs):
         host = result._host
-        self.output = json.dumps({host.name: result._result}, indent=4)
+        self.output = result._result
+        #json.dumps({host.name: result._result}, indent=4)
 
 def update_incident(details, state ):
-    assignmentgroup = "AutomationQ"
-    username = "zabbixicc"
-    passwd = "tcs#1234"
-    instance_name = "dev99449"
-    incident_number = details['incident_number']
-    if state == 4:
-           description = f'{details["service"]} has been started, hence closing the incident'
+    snow = ServiceNow_Connection()
+    snow.set_ServiceNow_Connection()
+    if state == 6:
+           snow.resolve_incident(details)
     else:
-           description = f'{details["service"]} has not started, issue cant be resolved automatically'
-
-    connection = pysnow.Client(user=username, password=passwd, instance=instance_name)
-    incident_res = connection.resource(api_path='/table/incident')
-    payload = {
-        'work_notes' : description,
-        'state': 2 
-    }
-    incident_update = incident_res.update(query={'number':incident_number}, payload=payload)
-    for i in incident_update.all():
-        print(i)
-    payload = {
-         'work_notes' : description,
-         'state': 6,
-         'incident_state': 6,
-         'resolution_code': 'closed/Resolved by Caller', 
-         'resolution_notes': f'{details["service"]} has been started, hence closing the incident',
-         'close_code' : 'closed/Resolved by Caller',
-         'close_notes' : f'{details["service"]} has been started, hence closing the incident'
-     }
-    incident_update = incident_res.update(query={'number':incident_number}, payload=payload)
-    for i in incident_update.all():
-        print(i)
+           snow.update_incident(details)
     
 
 def service_play_source(details):
@@ -109,8 +87,9 @@ def run_ansible_playbook(details):
               )
         result = tqm.run(play) # most interesting data for a play is actually sent to the callback's methods
         print(results_callback.output)
+        details.output = results_callback.output
         if result == 0:
-           update_incident(details,4)
+           update_incident(details,6)
         if result != 0:
            update_incident(details,2)
     finally:
