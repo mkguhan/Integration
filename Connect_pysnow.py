@@ -88,10 +88,10 @@ class ServiceNow_Connection():
         incident_resource = self.get_incidentResource()
         incident_update = incident_resource.update(query={'number': incident_number}, payload=payload)
         for incident_details in incident_update.all():
-            if  incident_details['incident_state'] == 2:
+            if int(incident_details['incident_state']) == 2:
                 print(f'Incident {incident_number} has been updated successfully')
             else:
-                print(incident_details['incident_state'])
+                print(type(incident_details['incident_state']))
                 print(f'Incident {incident_number} has been update failed')
 
 
