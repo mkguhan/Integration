@@ -1,13 +1,11 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import json
 import shutil
 from ansible.parsing.dataloader import DataLoader
 from ansible.inventory.manager import InventoryManager
 
-
-
-class Ansible_Play():
+class ansible_play():
 
       def __init__(self):
           assignmentgroup = "AutomationQ"
