@@ -21,19 +21,21 @@ def log_service_now(message):
 
 def get_ansible_parameters(server_name, problem_details, incident_number):
     print(problem_details)
-    details = None
+    details = {}
     if "Zabbix agent" in problem_details:
         details['service'] = "zabbix-agent"
         details['type'] = "service"
         details['server_name'] = server_name.strip()
         details['incident_number'] = incident_number
+        return details
     elif "Apache" in problem_details:
         details['service'] = "httpd"
         details['type'] = "service"
         details['server_name'] = server_name.strip()
         details['incident_number'] = incident_number
-
-    return details
+        return details
+    else:
+        return None
 
 def run():
     snow = ServiceNow_Connection()
