@@ -27,8 +27,19 @@ class ResultCallback(CallbackBase):
     def v2_runner_on_failed(self, result, **kwargs):
         host = result._host
         print(json.dumps({host.name: result}, indent=4))
-        self.output= result
+        self.output = result._result
         #json.dumps({host.name: result}, indent=4)
+
+    def v2_runner_on_unreachable(self, result, **kwargs):
+        host = result._host
+        print(json.dumps({host.name: result}, indent=4))
+        self.output = result._result
+
+    def v2_runner_on_skipped(self, result, **kwargs):
+        host = result._host
+        print(json.dumps({host.name: result}, indent=4))
+        self.output = result._result
+
 
 def update_incident(details, state, result ):
     snow = ServiceNow_Connection()
