@@ -18,9 +18,6 @@ from Ansible_Play import ansible_play
 
 class ResultCallback(CallbackBase):
 
-    def set_ouptut(self,data):
-        self.output = data
-
     def v2_runner_on_ok(self, result, **kwargs):
         host = result._host
         self.set_output(result._result)
