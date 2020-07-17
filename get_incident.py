@@ -18,6 +18,10 @@ def log_service_now(message):
     logging.basicConfig(filename='app.log', filemode='a', format='%(name)s - %(levelname)s - %(message)s')
     logging.info(msg=message)
 
+def update_incident(details, state, result ):
+    snow = ServiceNow_Connection()
+    snow.set_ServiceNow_Connection()
+    snow.update_incident(details, result)
 
 def get_ansible_parameters(server_name, problem_details, incident_number):
 
@@ -37,7 +41,10 @@ def get_ansible_parameters(server_name, problem_details, incident_number):
         details['incident_number'] = incident_number
         return details
     else:
-        print(f'{incident_number}: For this Problem we dont have Solution, hence Skipping the incident..')
+        print(f'Processing incident: {incident_number}')
+        description = "As we dont have Automated Solution for this problem, Skipping the incident"
+        details['incident_number'] = incident_number
+        update_incident(details, 2, description)
         return None
 
 def run():
