@@ -28,7 +28,7 @@ class ResultCallback(CallbackBase):
 
     def v2_runner_on_failed(self, result, **kwargs):
         host = result._host
-        self.output = result._result
+        self.set_output(result._result)
         #json.dumps({host.name: result._result}, indent=4)
 
 def update_incident(details, state, result ):
