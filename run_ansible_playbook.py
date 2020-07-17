@@ -32,8 +32,8 @@ class ResultCallback(CallbackBase):
 
     def v2_runner_on_unreachable(self, result, **kwargs):
         host = result._host
-        print(result)
-        self.output = result
+        print(result._result)
+        self.output = "Server Not Reachable from Ansible"
 
     def v2_runner_on_skipped(self, result, **kwargs):
         host = result._host
