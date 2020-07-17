@@ -18,9 +18,12 @@ from Ansible_Play import ansible_play
 
 class ResultCallback(CallbackBase):
 
+    def set_ouptut(self,data):
+        self.output = data
+
     def v2_runner_on_ok(self, result, **kwargs):
         host = result._host
-        self.output= result._result
+        self.set_output(result._result)
         #json.dumps({host.name: result._result}, indent=4)
 
     def v2_runner_on_failed(self, result, **kwargs):
@@ -90,7 +93,7 @@ def run_ansible_playbook(details):
         if result == 0:
            update_incident(details,6, results_callback.output)
         if result != 0:
-           update_incident(details,2, results_callback.output )
+           update_incident(details,2, results_callback.output)
     finally:
         # we always need to cleanup child procs and the structures we use to communicate with them
         if tqm is not None:
