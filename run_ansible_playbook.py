@@ -5,7 +5,6 @@ import shutil
 from ansible.module_utils.common.collections import ImmutableDict
 from ansible.parsing.dataloader import DataLoader
 from ansible.vars.manager import VariableManager
-from ansible.inventory.manager import InventoryManager
 from ansible.playbook.play import Play
 from ansible.executor.task_queue_manager import TaskQueueManager
 from ansible.plugins.callback import CallbackBase
@@ -13,18 +12,17 @@ from ansible import context
 import ansible.constants as C
 from ansible.utils.vars import load_extra_vars
 import pysnow
+import Ansible_Play
 
 class ResultCallback(CallbackBase):
+
     def v2_runner_on_ok(self, result, **kwargs):
         host = result._host
-        #details = {'description': f'{result._result["status"]["Names"]} on Server {host} has been started. Closing the ticket', 'state':4, 'incident_number'
-        print(result._result["status"]["Result"])
-        print(json.dumps({host.name: result._result}, indent=4))
+        self.output= json.dumps({host.name: result._result}, indent=4)
 
     def v2_runner_on_failed(self, result, **kwargs):
         host = result._host
-        print(result._result["status"]["Result"])
-        print(json.dumps({host.name: result._result}, indent=4))
+        self.output = json.dumps({host.name: result._result}, indent=4)
 
 def update_incident(details, state ):
     assignmentgroup = "AutomationQ"
@@ -75,26 +73,22 @@ def service_play_source(details):
 
 def run_ansible_playbook(details):
 
-    # since the API is constructed for CLI it expects certain options to always be set in the context object
-    context.CLIARGS = ImmutableDict(connection='local', module_path=None, forks=10, become=None,
-                                    become_method=None, become_user=None, check=False, diff=False)
-
     # initialize needed objects
-    loader = DataLoader() # Takes care of finding and reading yaml, json and ini files
     passwords = {} 
 
     # Instantiate our ResultCallback for handling results as they come in. Ansible expects this to be one of its main display outlets
     results_callback = ResultCallback()
-
-    # create inventory, use path to host config file as source or hosts in a comma separated string
-    inventory = InventoryManager(loader=loader, sources='/etc/ansible/hosts')
+    ansible_play = Ansible_Play()
+    ansible_play.incident_number = details['incident_number']
+    loader = DataLoader()
+    # get the Inventory details
+    inventory = ansible_play.get_inventory()
     extra_var = { f'service_name={details["service"]}' }
-    # variable manager takes care of merging all the different sources to give you a unified view of variables available in each context
     variable_manager = VariableManager(loader=loader, inventory=inventory)
     if details['type'] == "service":
         play_source=service_play_source(details)
     
-    context.CLIARGS = ImmutableDict( listtags=False, listtasks=False, listhosts=False, forks=100,private_key_file=None, ssh_common_args=None, ssh_extra_args=None, sftp_extra_args=None, scp_extra_args=None, become=True, become_method='sudo', become_user='root', verbosity=0, check=False, diff=False, extra_vars=extra_var,  module_path='run_ansible_playbook.py', syntax=False, connection='ssh')
+    context.CLIARGS = ImmutableDict(listtags=False, listtasks=False, listhosts=False, forks=100,private_key_file=None, ssh_common_args=None, ssh_extra_args=None, sftp_extra_args=None, scp_extra_args=None, become=True, become_method='sudo', become_user='root', verbosity=0, check=False, diff=False, extra_vars=extra_var,  module_path='run_ansible_playbook.py', syntax=False, connection='ssh')
     variable_manager._extra_vars=load_extra_vars(loader=loader)
     # create data structure that represents our play, including tasks, this is basically what our YAML loader does internally.
     
@@ -110,14 +104,14 @@ def run_ansible_playbook(details):
                   variable_manager=variable_manager,
                   loader=loader,
                   passwords=passwords,
-                  #stdout_callback=results_callback,  # Use our custom callback instead of the ``default`` callback plugin, which prints to stdout
+                  stdout_callback=results_callback,  # Use our custom callback instead of the ``default`` callback plugin, which prints to stdout
               )
         result = tqm.run(play) # most interesting data for a play is actually sent to the callback's methods
+        print(results_callback.output)
         if result == 0:
            update_incident(details,4)
         if result != 0:
            update_incident(details,2)
-        print(result)
     finally:
         # we always need to cleanup child procs and the structures we use to communicate with them
         if tqm is not None:
