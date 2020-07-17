@@ -21,7 +21,7 @@ def log_service_now(message):
 
 def get_ansible_parameters(server_name, problem_details, incident_number):
     print(problem_details)
-    details = {}
+    details = None
     if "Zabbix agent" in problem_details:
         details['service'] = "zabbix-agent"
         details['type'] = "service"
@@ -47,8 +47,9 @@ def run():
             server_name = incident['description'].split(",")[1]
             problem = incident['description'].split(",")[0]
             det_ansible = get_ansible_parameters(server_name, problem, incident['number'])
+            if det_ansible != None:
             #print(det_ansible)
-            run_ansible_playbook.run_ansible_playbook(det_ansible)
+                run_ansible_playbook.run_ansible_playbook(det_ansible)
     #message = f'Incident # {new_incident["records"][0]["number"]} has been Created'
     #print(message)
 
