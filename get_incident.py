@@ -20,21 +20,24 @@ def log_service_now(message):
 
 
 def get_ansible_parameters(server_name, problem_details, incident_number):
-    print(f'Processing incident: {incident_number}')
+
     details = {}
     if "Zabbix agent" in problem_details:
+        print(f'Processing incident: {incident_number}')
         details['service'] = "zabbix-agent"
         details['type'] = "service"
         details['server_name'] = server_name.strip()
         details['incident_number'] = incident_number
         return details
     elif "Apache: Service is down" in problem_details:
+        print(f'Processing incident: {incident_number}')
         details['service'] = "httpd"
         details['type'] = "service"
         details['server_name'] = server_name.strip()
         details['incident_number'] = incident_number
         return details
     else:
+        print(f'{incident_number}: For this Problem we dont have Solution, hence Skipping the incident..')
         return None
 
 def run():
