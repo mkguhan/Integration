@@ -40,7 +40,7 @@ def run():
             server_name = incident['description'].split(",")[1]
             problem = incident['description'].split(",")[0]
             det_ansible = get_ansible_parameters(server_name, problem, incident['number'])
-            print(det_ansible)
+            #print(det_ansible)
             run_ansible_playbook.run_ansible_playbook(det_ansible)
     #message = f'Incident # {new_incident["records"][0]["number"]} has been Created'
     #print(message)

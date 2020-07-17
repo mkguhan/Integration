@@ -21,19 +21,17 @@ class ResultCallback(CallbackBase):
     def v2_runner_on_ok(self, result, **kwargs):
         host = result._host
         self.output = result._result
-        print(json.dumps({host.name: result._result}, indent=4))
         #json.dumps({host.name: result._result}, indent=4)
 
     def v2_runner_on_failed(self, result, **kwargs):
         host = result._host
-        print(json.dumps({host.name: result}, indent=4))
         self.output = result._result
         #json.dumps({host.name: result}, indent=4)
 
     def v2_runner_on_unreachable(self, result, **kwargs):
         host = result._host
         print(result._result)
-        self.output = "Server Not Reachable from Ansible"
+        self.output = f'Server Not Reachable from Ansible {result._result}'
 
     def v2_runner_on_skipped(self, result, **kwargs):
         host = result._host
