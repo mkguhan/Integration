@@ -68,7 +68,8 @@ class ServiceNow_Connection():
             'resolution_code': 'closed/Resolved by Caller',
             'resolution_notes': f'{details["service"]} has been started, hence closing the incident',
         }
-        incident_update = self.inc_resource.update(self,query={'number': incident_number}, payload=payload)
+        incident_resource = self.get_incidentResource()
+        incident_update = incident_resource.update(self,query={'number': incident_number}, payload=payload)
         for incident_details in incident_update.all():
             if  incident_details['incident_state'] == 6:
                 return f'Incident {incident_number} has been resolved'
@@ -83,7 +84,8 @@ class ServiceNow_Connection():
             'state': 2,
             'incident_state': 2
         }
-        incident_update = self.inc_resource.update(self,query={'number': incident_number}, payload=payload)
+        incident_resource = self.get_incidentResource()
+        incident_update = incident_resource.update(self,query={'number': incident_number}, payload=payload)
         for incident_details in incident_update.all():
             if  incident_details['incident_state'] == 2:
                 print(f'Incident {incident_number} has been updated successfully')
