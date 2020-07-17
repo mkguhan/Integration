@@ -12,14 +12,15 @@ class ansible_play():
           username = "zabbixicc"
           passwd = "tcs#1234"
           instance_name = "dev99449"
-          loader = DataLoader()  # Takes care of finding and reading yaml, json and ini files
+            # Takes care of finding and reading yaml, json and ini files
 
 
       def set_incident_number(self, incident_number):
           self.incident_number = incident_number
 
       def set_inventory(self):
-          self.inventory = InventoryManager(loader=self.loader, sources='/etc/ansible/hosts')
+          loader = DataLoader()
+          self.inventory = InventoryManager(loader=loader, sources='/etc/ansible/hosts')
 
       def get_inventory(self):
           self.set_inventory()
