@@ -1,0 +1,10 @@
+---
+ - name: Service Start
+   hosts: Zabbixserver 
+   gather_facts: False
+   tasks: 
+     - name: Zabbix 
+       service:
+         name: zabbix-agent 
+         state: stopped
+

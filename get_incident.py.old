@@ -1,0 +1,68 @@
+#!/usr/local/bin/python3
+from servicenow import Connection
+from servicenow import ServiceNow
+import run_ansible_playbook
+
+import ansible
+
+import sys
+import datetime
+import logging
+import logging.handlers
+import os
+import io
+
+def log_service_now(message):
+    logging.basicConfig(filename='app.log', filemode='a', format='%(name)s - %(levelname)s - %(message)s')
+    logging.info(msg=message)
+
+def connect_servicenow(user, passwd, inst ):
+    try:
+        conn = Connection.Auth(username='zabbixicc', password="tcs#1234", instance="dev99449", api = "JSONv2")
+    except:
+        print('Error Connecting the ServiceNow Instance')
+    finally:
+        return conn
+
+def get_ansible_parameters(server_name, problem_details):
+    details = {}
+    if "Zabbix agent" in problem_details:
+        details['service'] = "zabbix-agent"
+        details['type'] = "service"
+        details['server_name'] = server_name.strip()
+    return details
+
+def main():
+    #Variable assignments
+    assignmentgroup = "AutomationQ"
+    user = "zabbixicc"
+    passwd = "tcs#1234"
+    instance_name = "dev99449"
+
+    #Creating the conneciton to Service now
+    connection = connect_servicenow(user, passwd, instance_name)
+    #Connection the incident instance on Service now
+    incident_Connection = ServiceNow.Incident(connection)
+    # Create Conneciton to Group instance
+    group_conneciton = ServiceNow.Group(connection)
+    # fetch the details of Group AutomationQ
+    group_con = ServiceNow.Group.fetch_all(group_conneciton, {"name": "AutomationQ"})
+    # Get the sys_id for AutomationQ, which is need to get the list of instance in AutomationQ
+    group_sid = group_con['records'][0]['sys_id']
+    fetch_incident = ServiceNow.Incident.fetch_all(incident_Connection,{"assignment_group": group_sid, "state" : 1})
+    for i in range(0,len(fetch_incident['records'])):
+         det_ansible = {}
+         if len(fetch_incident['records'][i]['description'].split(",")) > 2 :
+             server_name = fetch_incident['records'][i]['description'].split(",")[1]
+             problem = fetch_incident['records'][i]['description'].split(",")[0]
+             det_ansible = get_ansible_parameters(server_name, problem)
+             print(det_ansible)
+             run_ansible_playbook.run_ansible_playbook(det_ansible)
+   
+    #message = f'Incident # {new_incident["records"][0]["number"]} has been Created'
+    #print(message)
+
+
+main()
+
+
