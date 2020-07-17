@@ -28,13 +28,13 @@ class ResultCallback(CallbackBase):
         self.output = result._result
         #json.dumps({host.name: result._result}, indent=4)
 
-def update_incident(details, state ):
+def update_incident(details, state, result ):
     snow = ServiceNow_Connection()
     snow.set_ServiceNow_Connection()
     if state == 6:
-           snow.resolve_incident(details)
+           snow.resolve_incident(details, result)
     else:
-           snow.update_incident(details)
+           snow.update_incident(details, result)
     
 
 def service_play_source(details):
@@ -86,12 +86,11 @@ def run_ansible_playbook(details):
                   stdout_callback=results_callback,  # Use our custom callback instead of the ``default`` callback plugin, which prints to stdout
               )
         result = tqm.run(play) # most interesting data for a play is actually sent to the callback's methods
-        print(results_callback.output)
-        details.output = results_callback.output
+
         if result == 0:
-           update_incident(details,6)
+           update_incident(details,6, results_callback.output)
         if result != 0:
-           update_incident(details,2)
+           update_incident(details,2, results_callback.output )
     finally:
         # we always need to cleanup child procs and the structures we use to communicate with them
         if tqm is not None:

@@ -58,10 +58,10 @@ class ServiceNow_Connection():
              print(f'Error getting the New incident on Assignment Group {self.assignmentgroup}')
 
 
-    def resolve_incident(self, details):
+    def resolve_incident(self, details,result):
 
         incident_number = details['incident_number']
-        description = f'{details["service"]} has been started, hence closing the incident'
+        description = result['status']
         payload = {
             'work_notes': description,
             'state': 6,
@@ -74,10 +74,10 @@ class ServiceNow_Connection():
                 return f'Incident {incident_number} has been resolved'
 
 
-    def update_incident(self, details):
+    def update_incident(self, details, result):
 
         incident_number = details['incident_number']
-        description = details['output']['status']
+        description = result['status']
         payload = {
             'work_notes': description,
             'state': 2,
