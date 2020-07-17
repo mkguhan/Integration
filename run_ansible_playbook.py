@@ -12,6 +12,7 @@ from ansible import context
 import ansible.constants as C
 from ansible.utils.vars import load_extra_vars
 import pysnow
+
 from Ansible_Play import ansible_play
 
 class ResultCallback(CallbackBase):
