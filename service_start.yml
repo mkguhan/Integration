@@ -5,6 +5,6 @@
    tasks: 
      - name: Zabbix 
        service:
-         name: zabbix-agent 
+         name:
          state: stopped
 

@@ -51,7 +51,6 @@ class ServiceNow_Connection():
     def get_new_incident(self, assignmentgroupSid):
          try:
              incident_resource = self.get_incidentResource()
-             print()
              incident_details = incident_resource.get(query={'state': 1, 'assignment_group': assignmentgroupSid})
              return incident_details
          except:
