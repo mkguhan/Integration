@@ -79,7 +79,7 @@ class ServiceNow_Connection():
     def update_incident(self, details, result):
 
         incident_number = details['incident_number']
-        description = result['status']
+        description = result
         payload = {
             'work_notes': description,
             'state': 2,
