@@ -32,8 +32,8 @@ class ResultCallback(CallbackBase):
 
     def v2_runner_on_unreachable(self, result, **kwargs):
         host = result._host
-        print(json.dumps({host.name: result}, indent=4))
-        self.output = result._result
+        print(result)
+        self.output = result
 
     def v2_runner_on_skipped(self, result, **kwargs):
         host = result._host
