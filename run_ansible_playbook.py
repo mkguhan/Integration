@@ -12,7 +12,7 @@ from ansible import context
 import ansible.constants as C
 from ansible.utils.vars import load_extra_vars
 import pysnow
-import Ansible_Play
+from Ansible_Play import ansible_play
 
 class ResultCallback(CallbackBase):
 
@@ -78,11 +78,11 @@ def run_ansible_playbook(details):
 
     # Instantiate our ResultCallback for handling results as they come in. Ansible expects this to be one of its main display outlets
     results_callback = ResultCallback()
-    ansible_play = Ansible_Play()
-    ansible_play.incident_number = details['incident_number']
+    ansible_connect = ansible_play()
+    ansible_connect.incident_number = details['incident_number']
     loader = DataLoader()
     # get the Inventory details
-    inventory = ansible_play.get_inventory()
+    inventory = ansible_connect.get_inventory()
     extra_var = { f'service_name={details["service"]}' }
     variable_manager = VariableManager(loader=loader, inventory=inventory)
     if details['type'] == "service":
