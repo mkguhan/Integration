@@ -189,7 +189,7 @@ class ServiceNow_Connection():
         try:
             request_number = details['request_number']
             sc_task = details['sc_tasks']
-            if result['state'] == 'Present':
+            if int(state) == 3:
                 description = "User Account has been Created"
             else:
                 description = "Issue Creating User Account"
