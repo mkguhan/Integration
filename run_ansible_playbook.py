@@ -66,7 +66,8 @@ def AD_user_accountCreation(details):
         hosts="midserver1",
         gather_facts='no',
         tasks=[
-            dict(action=dict(module='win_domain_user', args=dict(name='{{uname | regex_replace("^\\/", "") }}', firstname='{{f_name}}', surname='{{l_name}}' , groups='{{g_name}}', domain_username="Labicc.com\guhan" , domain_password="Aadhav@0618", domain_server="DEC003110", state="present"))),
+            dict(action=dict(module='win_domain_user', args=dict(firstname='{{f_name}}', name='{{uname}}', surname='{{l_name}}' , groups='{{g_name}}', domain_username="Labicc.com\guhan" , domain_password="Aadhav@0618", domain_server="DEC003110", state="present"))),
+            dict(action=dict(module='debug', args=dict(msg='{{uname}}')))
         ]
     )
     return play_source
