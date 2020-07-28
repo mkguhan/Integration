@@ -1,7 +1,7 @@
 #!/usr/local/bin/python3
 import pysnow
 from Connect_pysnow import ServiceNow_Connection
-
+import run_ansible_playbook
 
 def run():
     snow = ServiceNow_Connection()
@@ -18,6 +18,7 @@ def run():
             options.append(variables['sc_item_option']['value'])
         #print(options)
         user_details = snow.get_user_details(options)
+        run_ansible_playbook.run_ansible_playbook(user_details)
 
 
 
