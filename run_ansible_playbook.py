@@ -66,7 +66,7 @@ def AD_user_accountCreation(details):
         hosts="midserver1",
         gather_facts='no',
         tasks=[
-            dict(action=dict(module='win_domain_user', args=dict(name='{{details["uname"]}}', firstname='{{details["f_name"]}}', surname='{{details["l_name"]}}' , groups='{{details["g_name"]}}', domain_username="Labicc.com\guhan" , domain_password="Aadhav@0618", domain_server="DEC003110", state="prenset"))),
+            dict(action=dict(module='win_domain_user', args=dict(name='{{uname]}}', firstname='{{f_name}}', surname='{{l_name}}' , groups='{{g_name}}', domain_username="Labicc.com\guhan" , domain_password="Aadhav@0618", domain_server="DEC003110", state="prenset"))),
         ]
     )
     return play_source
@@ -92,7 +92,7 @@ def run_ansible_playbook(details):
         extra_var = {f'service_name={details["service"]}'}
     if details['type'] == "usr_acc_creation":
         play_source=AD_user_accountCreation(details)
-    
+        extra_var = {f'uname={details["uname"]}, f_name={details["f_name"]} , l_name={details["l_name"]}, g_name={details["g_name"]}'}
     context.CLIARGS = ImmutableDict(listtags=False, listtasks=False, listhosts=False, forks=100,private_key_file=None, ssh_common_args=None, ssh_extra_args=None, sftp_extra_args=None, scp_extra_args=None, become=True, become_method='sudo', become_user='root', verbosity=0, check=False, diff=False, extra_vars=extra_var,  module_path='run_ansible_playbook.py', syntax=False, connection='ssh')
     variable_manager._extra_vars=load_extra_vars(loader=loader)
     # create data structure that represents our play, including tasks, this is basically what our YAML loader does internally.
