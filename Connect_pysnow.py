@@ -105,6 +105,25 @@ class ServiceNow_Connection():
             else:
                 print(f'Incident {incident_number} has been update failed')
 
+    def resolve_request(self, details,result):
+
+        Request_number = details['request_number']
+        description = result['status']
+        payload = {
+            'work_notes': description,
+            'state': 6,
+            'resolution_code': 'closed/Resolved by Caller',
+            'resolution_notes': f'{details["service"]} has been started, hence closing the incident',
+            'close_notes': f'{details["service"]} has been started, hence closing the incident'
+        }
+        incident_resource = self.get_incidentResource()
+        incident_update = incident_resource.update(query={'number': Request_number}, payload=payload)
+        for incident_details in incident_update.all():
+            if int(incident_details['incident_state']) == 6:
+                print(f'Incident {incident_number} has been resolved')
+            else:
+                print(f'Incident {incident_number} has been update failed')
+
     def update_incident(self, details, result):
 
         incident_number = details['incident_number']
