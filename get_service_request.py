@@ -17,8 +17,9 @@ def run():
         for variables in variables.all():
             options.append(variables['sc_item_option']['value'])
         #print(options)
+        details_d = {}
         user_details = snow.get_user_details(options)
-        print(user_details)
+        user_details['request_number'] = snow.get_ritmNumber(request['request_item']['value'])
         run_ansible_playbook.run_ansible_playbook(user_details)
 
 

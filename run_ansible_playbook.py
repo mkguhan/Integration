@@ -47,6 +47,12 @@ def update_incident(details, state, result ):
     else:
            snow.update_incident(details, result)
     
+def update_ritm(details,state,result):
+    snow = ServiceNow_Connection()
+    snow.set_ServiceNow_Connection()
+    snow.close_request(details, state, result)
+
+
 
 def service_play_source(details):
     service_name = details['service']
@@ -118,8 +124,12 @@ def run_ansible_playbook(details):
         print(results_callback.output)
         if result == 0 and details['incident']:
            update_incident(details,6, results_callback.output)
+        if result == 0 and not details['incident']:
+            update_ritm(details,3, results_callback.output)
         if result != 0 and details['incident']:
            update_incident(details,2, results_callback.output)
+        if result == 0 and not details['incident']:
+            update_ritm(details,2, results_callback.output)
     finally:
         # we always need to cleanup child procs and the structures we use to communicate with them
         if tqm is not None:

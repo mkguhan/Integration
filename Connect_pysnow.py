@@ -58,6 +58,13 @@ class ServiceNow_Connection():
         except:
             print("Issue in Creating Variable Resource")
 
+    def get_ritmResource(self):
+        try:
+            self.servicerequest_resource = self.connection.resource(api_path="/table/sc_req_item")
+            return self.servicerequest_resource
+        except:
+            print("Issue in Creating RITM Resource")
+
     def get_groupSysId(self, assignmentgroup):
          try:
              group_resource = self.get_groupResource()
@@ -105,24 +112,6 @@ class ServiceNow_Connection():
             else:
                 print(f'Incident {incident_number} has been update failed')
 
-    def resolve_request(self, details,result):
-
-        Request_number = details['request_number']
-        description = result['status']
-        payload = {
-            'work_notes': description,
-            'state': 6,
-            'resolution_code': 'closed/Resolved by Caller',
-            'resolution_notes': f'{details["service"]} has been started, hence closing the incident',
-            'close_notes': f'{details["service"]} has been started, hence closing the incident'
-        }
-        incident_resource = self.get_incidentResource()
-        incident_update = incident_resource.update(query={'number': Request_number}, payload=payload)
-        for incident_details in incident_update.all():
-            if int(incident_details['incident_state']) == 6:
-                print(f'Incident {incident_number} has been resolved')
-            else:
-                print(f'Incident {incident_number} has been update failed')
 
     def update_incident(self, details, result):
 
@@ -181,3 +170,34 @@ class ServiceNow_Connection():
             return user
         except:
             print("Issue Getting the Variables for request item")
+
+
+    def get_ritmNumber(self, sys_id):
+        try:
+            ritm_resource = self.get_ritmResource()
+            ritm_details = ritm_resource.get(query={'sys_id':sys_id})
+            ritm = []
+            for ritm_det in ritm_details.all():
+                print(ritm_det)
+                ritm.append(ritm_det['number'])
+            return ritm[0]
+        except:
+            print("Issue Getting the RITM Number")
+
+
+    def close_request(self,details,state,result):
+        try:
+            request_number = details['request_number']
+            description = result['status']
+            payload = {
+                'state': f'{state}' ,
+                'comments': f'{description}',
+                'close_notes': f'{description}'
+            }
+            request_resource = self.get_ritmResource()
+            request_details = request_resource.update(query={'number':request_number}, payload=payload)
+            for request in request_details.all():
+                print(request)
+
+        except:
+            print(f'Issue Closing the RITM {details["request_number"]}')
