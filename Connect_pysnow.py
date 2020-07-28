@@ -189,6 +189,7 @@ class ServiceNow_Connection():
         try:
             request_number = details['request_number']
             sc_tasks = details['sc_tasks']
+            print(sc_tasks)
             description = result['status']
             payload = {
                 'state': f'{state}' ,
@@ -197,10 +198,11 @@ class ServiceNow_Connection():
             }
             sc_task_res = self.get_serviceResource()
             sc_task_update = sc_task_res.update(query={'number':sc_tasks}, payload=payload)
+            for sc_task_update in sc_task_update.all():
+                print(sc_task_update)
             request_resource = self.get_ritmResource()
             request_details = request_resource.update(query={'number':request_number}, payload=payload)
-            for request in request_details.all():
-                print(request)
+
 
         except:
             print(f'Issue Closing the RITM {details["request_number"]}')
