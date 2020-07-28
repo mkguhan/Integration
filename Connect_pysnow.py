@@ -188,6 +188,7 @@ class ServiceNow_Connection():
     def close_request(self,details,state,result):
         try:
             request_number = details['request_number']
+            sc_task = details['sc_tasks']
             if result['state'] == 'Present':
                 description = "User Account has been Created"
             else:
@@ -196,9 +197,15 @@ class ServiceNow_Connection():
                 'state': f'{state}',
                 'comments': f'{description}'
             }
+            payload_sctasks = {
+                'state': f'{state}',
+                'comments': f'{description}'
+            }
+            sctaks_resource = self.get_serviceResource()
+            sctaks_update = sctaks_resource.update(query={'number':sc_task}, payload=payload_sctasks)
             request_resource = self.get_ritmResource()
             request_details = request_resource.update(query={'number':request_number}, payload=payload)
             for request_det in request_details.all():
-                print(request_det)
+                pass
         except:
             print(f'Issue Closing the RITM {details["request_number"]}')

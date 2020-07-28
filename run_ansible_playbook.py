@@ -125,7 +125,7 @@ def run_ansible_playbook(details):
             update_ritm(details,3, results_callback.output)
         if result != 0 and details['incident']:
            update_incident(details,2, results_callback.output)
-        if result == 0 and  details['request']:
+        if result != 0 and  details['request']:
             update_ritm(details,2, results_callback.output)
     finally:
         # we always need to cleanup child procs and the structures we use to communicate with them
