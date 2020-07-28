@@ -18,6 +18,7 @@ def run():
             options.append(variables['sc_item_option']['value'])
         #print(options)
         user_details = snow.get_user_details(options)
+        print(user_details)
         run_ansible_playbook.run_ansible_playbook(user_details)
 
 
