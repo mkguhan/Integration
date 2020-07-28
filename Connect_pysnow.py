@@ -180,7 +180,7 @@ class ServiceNow_Connection():
             for ritm_det in ritm_details.all():
                 #print(ritm_det)
                 ritm.append(ritm_det['number'])
-            #return ritm[0]
+            return ritm[0]
         except:
             print("Issue Getting the RITM Number")
 
