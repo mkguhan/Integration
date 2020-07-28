@@ -178,9 +178,9 @@ class ServiceNow_Connection():
             ritm_details = ritm_resource.get(query={'sys_id':sys_id})
             ritm = []
             for ritm_det in ritm_details.all():
-                print(ritm_det)
+                #print(ritm_det)
                 ritm.append(ritm_det['number'])
-            return ritm[0]
+            #return ritm[0]
         except:
             print("Issue Getting the RITM Number")
 
