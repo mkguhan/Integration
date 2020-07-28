@@ -112,7 +112,7 @@ def run_ansible_playbook(details):
                   stdout_callback=results_callback,  # Use our custom callback instead of the ``default`` callback plugin, which prints to stdout
               )
         result = tqm.run(play) # most interesting data for a play is actually sent to the callback's methods
-
+        print(result)
         if result == 0 and details['incident']:
            update_incident(details,6, results_callback.output)
         if result != 0 and details['incident']:
