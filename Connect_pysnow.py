@@ -194,6 +194,7 @@ class ServiceNow_Connection():
                 'comments': f'{description}'
             }
             request_resource = self.get_ritmResource()
+            print(request_resource)
             request_details = request_resource.update(query={'number':request_number}, payload=payload)
             for request_det in request_details.all():
                 print(request_det)
