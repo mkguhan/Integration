@@ -3,7 +3,6 @@ import pysnow
 from Connect_pysnow import ServiceNow_Connection
 import run_ansible_playbook
 import ansible
-
 import sys
 import datetime
 import logging

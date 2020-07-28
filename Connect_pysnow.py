@@ -6,6 +6,7 @@ import os
 import io
 
 
+
 class ServiceNow_Connection():
 
     def __init__(self):
@@ -36,6 +37,26 @@ class ServiceNow_Connection():
          except:
              print("Issue in Creating Incident Resource")
 
+    def get_task_resource(self):
+        try:
+            self.task_resource = self.connection.resource(api_path="/table/task")
+            return self.task_resource
+        except:
+            print("Issue in get task Resource")
+
+    def get_serviceResource(self):
+         try:
+             self.servicerequest_resource = self.connection.resource(api_path="/table/sc_task")
+             return self.servicerequest_resource
+         except:
+             print("Issue in Creating Request Resource")
+
+    def get_variable_options(self):
+        try:
+            self.variable_resource = self.connection.resource(api_path="/table/sc_item_option_mtom")
+            return self.variable_resource
+        except:
+            print("Issue in Creating Variable Resource")
 
     def get_groupSysId(self, assignmentgroup):
          try:
@@ -55,6 +76,14 @@ class ServiceNow_Connection():
              return incident_details
          except:
              print(f'Error getting the New incident on Assignment Group {self.assignmentgroup}')
+
+    def get_request_details(self, assignmentgroupSid):
+        try:
+            service_resource = self.get_serviceResource()
+            service_request_details = service_resource.get(query={'state': 1 , 'assignment_group': assignmentgroupSid})
+            return service_request_details
+        except:
+            print(f'Error getting the Request Item on Assignment Group {self.assignmentgroup}')
 
 
     def resolve_incident(self, details,result):
@@ -94,11 +123,42 @@ class ServiceNow_Connection():
                 print(f'Incident {incident_number} has been update failed')
 
 
+    def get_variables(self, request):
+        variables_resource = self.get_variable_options()
+        variable = variables_resource.get(query ={'request_item':request})
+        return variable
+
+    def get_options_resource(self):
+        try:
+            self.variable_resource = self.connection.resource(api_path="/table/sc_item_option")
+            return self.variable_resource
+        except:
+            print("Issue in Creating Variable Resource")
 
 
-
-
-
-
-
-
+    def get_user_details(self, options):
+        try:
+            user = {'uname' :'', 'f_name': '', 'l_name' : '', 'g_name':'', 'type':'usr_acc_creation'}
+            option_resource = self.get_options_resource()
+            for i in range(0, len(options)):
+                option_detail = option_resource.get(query={'sys_id': options[i]})
+                option_dets = []
+                option_order = []
+                for det in option_detail.all():
+                    #print(type(det['order']))
+                    if int(det['order'] )== 1:
+                        group_resource = self.get_groupResource()
+                        group_name = group_resource.get(query={'sys_id': det['value']})
+                        name = []
+                        for g_name in group_name.all():
+                            name.append(g_name['name'])
+                        user['g_name'] = name[0]
+                    if int(det['order']) == 2:
+                        user['f_name'] = det['value']
+                    if int(det['order']) == 3:
+                        user['l_name'] = det['value']
+                    if int(det['order']) == 4:
+                        user['uname'] = det['value']
+            return user
+        except:
+            print("Issue Getting the Variables for request item")
