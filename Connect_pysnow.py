@@ -189,7 +189,7 @@ class ServiceNow_Connection():
         try:
             request_number = details['request_number']
             print(request_number)
-            print(result['status'])
+            print(result)
             description = result['status']
             payload = {
                 'state': f'{state}',
