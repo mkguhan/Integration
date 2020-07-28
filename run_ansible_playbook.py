@@ -92,7 +92,8 @@ def run_ansible_playbook(details):
         extra_var = {f'service_name={details["service"]}'}
     if details['type'] == "usr_acc_creation":
         play_source=AD_user_accountCreation(details)
-        extra_var = {f'uname={details["uname"]}, f_name={details["f_name"]} , l_name={details["l_name"]}, g_name={details["g_name"]}'}
+        extra_var = {f'f_name={details["f_name"]} , uname={details["uname"]}, l_name={details["l_name"]}, g_name={details["g_name"]}'}
+        print(extra_var)
     context.CLIARGS = ImmutableDict(listtags=False, listtasks=False, listhosts=False, forks=100,private_key_file=None, ssh_common_args=None, ssh_extra_args=None, sftp_extra_args=None, scp_extra_args=None, become=False, become_method='sudo', become_user='root', verbosity=0, check=False, diff=False, extra_vars=extra_var,  module_path='run_ansible_playbook.py', syntax=False, connection='ssh')
     variable_manager._extra_vars=load_extra_vars(loader=loader)
     # create data structure that represents our play, including tasks, this is basically what our YAML loader does internally.
