@@ -24,6 +24,7 @@ def update_incident(details, state, result ):
 def get_ansible_parameters(server_name, problem_details, incident_number):
 
     details = {}
+    details['incident'] = True
     if "Zabbix agent" in problem_details:
         print(f'Processing incident: {incident_number}')
         details['service'] = "zabbix-agent"

@@ -80,7 +80,7 @@ def run_ansible_playbook(details):
     # Instantiate our ResultCallback for handling results as they come in. Ansible expects this to be one of its main display outlets
     results_callback = ResultCallback()
     ansible_connect = ansible_play()
-    if details['incident_number']:
+    if details['incident']:
         ansible_connect.incident_number = details['incident_number']
     loader = DataLoader()
     # get the Inventory details
@@ -113,9 +113,9 @@ def run_ansible_playbook(details):
               )
         result = tqm.run(play) # most interesting data for a play is actually sent to the callback's methods
 
-        if result == 0 and details['incident_number']:
+        if result == 0 and details['incident']:
            update_incident(details,6, results_callback.output)
-        if result != 0 and details['incident_number']:
+        if result != 0 and details['incident']:
            update_incident(details,2, results_callback.output)
     finally:
         # we always need to cleanup child procs and the structures we use to communicate with them

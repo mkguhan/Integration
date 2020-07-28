@@ -138,7 +138,7 @@ class ServiceNow_Connection():
 
     def get_user_details(self, options):
         try:
-            user = {'uname' :'', 'f_name': '', 'l_name' : '', 'g_name':'', 'type':'usr_acc_creation'}
+            user = {'uname' :'', 'f_name': '', 'l_name' : '', 'g_name':'', 'type':'usr_acc_creation', 'incident':False}
             option_resource = self.get_options_resource()
             for i in range(0, len(options)):
                 option_detail = option_resource.get(query={'sys_id': options[i]})
