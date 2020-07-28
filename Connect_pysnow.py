@@ -188,6 +188,8 @@ class ServiceNow_Connection():
     def close_request(self,details,state,result):
         try:
             request_number = details['request_number']
+            print(request_number)
+            print(result['status'])
             description = result['status']
             payload = {
                 'state': f'{state}',
