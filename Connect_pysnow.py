@@ -188,12 +188,15 @@ class ServiceNow_Connection():
     def close_request(self,details,state,result):
         try:
             request_number = details['request_number']
+            sc_tasks = details['sc_tasks']
             description = result['status']
             payload = {
                 'state': f'{state}' ,
                 'comments': f'{description}',
                 'close_notes': f'{description}'
             }
+            sc_task_res = self.get_serviceResource()
+            sc_task_update = sc_task_res.update(query={'number':sc_tasks}, payload=payload)
             request_resource = self.get_ritmResource()
             request_details = request_resource.update(query={'number':request_number}, payload=payload)
             for request in request_details.all():

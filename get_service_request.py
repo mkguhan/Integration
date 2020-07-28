@@ -12,6 +12,8 @@ def run():
     for request in request_details.all():
         #print(request)
         variables = snow.get_variables(request['request_item']['value'])
+        sc_tasks = request['number']
+        print(sc_tasks)
         print(f'###############{request["request_item"]["value"]}#################')
         options = []
         for variables in variables.all():
@@ -20,6 +22,7 @@ def run():
         details_d = {}
         user_details = snow.get_user_details(options)
         user_details['request_number'] = snow.get_ritmNumber(request['request_item']['value'])
+        user_details['sc_tasks'] = sc_tasks
         run_ansible_playbook.run_ansible_playbook(user_details)
 
 
