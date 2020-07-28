@@ -113,6 +113,7 @@ def run_ansible_playbook(details):
               )
         result = tqm.run(play) # most interesting data for a play is actually sent to the callback's methods
         print(result)
+        print(results_callback.output)
         if result == 0 and details['incident']:
            update_incident(details,6, results_callback.output)
         if result != 0 and details['incident']:
