@@ -119,15 +119,13 @@ def run_ansible_playbook(details):
                   stdout_callback=results_callback,  # Use our custom callback instead of the ``default`` callback plugin, which prints to stdout
               )
         result = tqm.run(play) # most interesting data for a play is actually sent to the callback's methods
-        print(result)
-        print(results_callback.output)
         if result == 0 and details['incident']:
            update_incident(details,6, results_callback.output)
-        if result == 0 and not details['incident']:
+        if result == 0 and  details['request']:
             update_ritm(details,3, results_callback.output)
         if result != 0 and details['incident']:
            update_incident(details,2, results_callback.output)
-        if result == 0 and not details['incident']:
+        if result == 0 and  details['request']:
             update_ritm(details,2, results_callback.output)
     finally:
         # we always need to cleanup child procs and the structures we use to communicate with them
