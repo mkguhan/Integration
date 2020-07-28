@@ -66,7 +66,7 @@ def AD_user_accountCreation(details):
         hosts="midserver1",
         gather_facts='no',
         tasks=[
-            dict(action=dict(module='win_domain_user', args=dict(firstname=details['f_name'], name=details['uname'], surname=details['l_name'] , groups=details['g_name'], domain_username="Labicc.com\guhan" , domain_password="Aadhav@0618", domain_server="DEC003110", state="present"))),
+            dict(action=dict(module='win_domain_user', args=dict(firstname=details['f_name'], name=details['uname'], password='xAsdfeG@0618', surname=details['l_name'] , groups=details['g_name'], domain_username="Labicc.com\guhan" , domain_password="Aadhav@0618", domain_server="DEC003110", state="present"))),
             dict(action=dict(module='debug', args=dict(msg='{{uname}}')))
         ]
     )
