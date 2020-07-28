@@ -188,15 +188,15 @@ class ServiceNow_Connection():
     def close_request(self,details,state,result):
         try:
             request_number = details['request_number']
-            print(request_number)
-            print(result)
-            description = result['status']
+            if result['state'] == 'Present':
+                description = "User Account has been Created"
+            else:
+                description = "Issue Creating User Account"
             payload = {
                 'state': f'{state}',
                 'comments': f'{description}'
             }
             request_resource = self.get_ritmResource()
-            print(request_resource)
             request_details = request_resource.update(query={'number':request_number}, payload=payload)
             for request_det in request_details.all():
                 print(request_det)
