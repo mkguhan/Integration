@@ -10,18 +10,21 @@ import io
 class ServiceNow_Connection():
 
     def __init__(self):
+        # Intializing the servicenow Credentials
         self.assignmentgroup = "AutomationQ"
         self.username = "zabbixicc"
         self.passwd = "tcs#1234"
         self.instance_name = "dev99449"
 
+    # Intializing the Service now conneciton and store it in conneciton Attribute
     def set_ServiceNow_Connection(self):
         try:
             self.connection = pysnow.Client(user=self.username, password=self.passwd, instance=self.instance_name)
         except:
             print("Issue in Conneciting Servicenow")
 
-
+    # Intializing the group resource with table sys_user_group to access
+    # the group data
     def get_groupResource(self):
          try:
              self.group_resource = self.connection.resource(api_path="/table/sys_user_group")
@@ -29,7 +32,8 @@ class ServiceNow_Connection():
          except:
              print("Issue in Creating group Resource")
 
-
+    # Intializing the Incident resource with table incident to access
+    # the incident details
     def get_incidentResource(self):
          try:
              self.inc_resource = self.connection.resource(api_path="/table/incident")
@@ -37,6 +41,8 @@ class ServiceNow_Connection():
          except:
              print("Issue in Creating Incident Resource")
 
+    # Intializing the task resource with table incident to access
+    # the incident details
     def get_task_resource(self):
         try:
             self.task_resource = self.connection.resource(api_path="/table/task")
@@ -44,6 +50,8 @@ class ServiceNow_Connection():
         except:
             print("Issue in get task Resource")
 
+    # Intializing the SCTASK resource with table sc_task to access
+    # the sc_task details
     def get_serviceResource(self):
          try:
              self.servicerequest_resource = self.connection.resource(api_path="/table/sc_task")
@@ -51,6 +59,8 @@ class ServiceNow_Connection():
          except:
              print("Issue in Creating Request Resource")
 
+    # Intializing the SC Item Option resource with table sc_item_option_mtom  to access
+    # the different variable sysid
     def get_variable_options(self):
         try:
             self.variable_resource = self.connection.resource(api_path="/table/sc_item_option_mtom")
@@ -58,6 +68,8 @@ class ServiceNow_Connection():
         except:
             print("Issue in Creating Variable Resource")
 
+    # Intializing the Reqeust Item Option resource with table sc_req_item  to access
+    # the different variable sysid
     def get_ritmResource(self):
         try:
             self.servicerequest_resource = self.connection.resource(api_path="/table/sc_req_item")
