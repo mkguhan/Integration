@@ -17,16 +17,19 @@ from Connect_pysnow import ServiceNow_Connection
 from Ansible_Play import ansible_play
 
 class ResultCallback(CallbackBase):
+    # Class created for getting the result from Ansible Playbook
 
+    # V2_runner_on_ok is the call back method when the Playbook
+    # Successfully Completed
     def v2_runner_on_ok(self, result, **kwargs):
         host = result._host
         self.output = result._result
-        #json.dumps({host.name: result._result}, indent=4)
+
 
     def v2_runner_on_failed(self, result, **kwargs):
         host = result._host
         self.output = result._result
-        #json.dumps({host.name: result}, indent=4)
+
 
     def v2_runner_on_unreachable(self, result, **kwargs):
         host = result._host
@@ -35,7 +38,6 @@ class ResultCallback(CallbackBase):
 
     def v2_runner_on_skipped(self, result, **kwargs):
         host = result._host
-        print(json.dumps({host.name: result}, indent=4))
         self.output = result._result
 
 
@@ -46,12 +48,12 @@ def update_incident(details, state, result ):
            snow.resolve_incident(details, result)
     else:
            snow.update_incident(details, result)
-    
+
+
 def update_ritm(details,state,result):
     snow = ServiceNow_Connection()
     snow.set_ServiceNow_Connection()
     snow.close_request(details, state, result)
-
 
 
 def service_play_source(details):

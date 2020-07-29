@@ -150,10 +150,7 @@ class ServiceNow_Connection():
             option_resource = self.get_options_resource()
             for i in range(0, len(options)):
                 option_detail = option_resource.get(query={'sys_id': options[i]})
-                option_dets = []
-                option_order = []
                 for det in option_detail.all():
-                    #print(type(det['order']))
                     if int(det['order'] )== 1:
                         group_resource = self.get_groupResource()
                         group_name = group_resource.get(query={'sys_id': det['value']})
@@ -178,7 +175,6 @@ class ServiceNow_Connection():
             ritm_details = ritm_resource.get(query={'sys_id':sys_id})
             ritm = []
             for ritm_det in ritm_details.all():
-                #print(ritm_det)
                 ritm.append(ritm_det['number'])
             return ritm[0]
         except:
@@ -206,6 +202,7 @@ class ServiceNow_Connection():
             request_resource = self.get_ritmResource()
             request_details = request_resource.update(query={'number':request_number}, payload=payload)
             for request_det in request_details.all():
+                # As dont using any operation as of now hence Pass is used for skipping
                 pass
         except:
             print(f'Issue Closing the RITM {details["request_number"]}')
