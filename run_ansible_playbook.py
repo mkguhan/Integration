@@ -23,11 +23,13 @@ class ResultCallback(CallbackBase):
     # Successfully Completed
     def v2_runner_on_ok(self, result, **kwargs):
         host = result._host
+        print(result._result)
         self.output = result._result
 
 
     def v2_runner_on_failed(self, result, **kwargs):
         host = result._host
+        print(result._result)
         self.output = result._result
 
 
