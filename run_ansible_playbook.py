@@ -114,8 +114,11 @@ def run_ansible_playbook(details):
     if details['type'] == "usr_acc_creation":
         play_source=AD_user_accountCreation(details)
         extra_var = {f'f_name={details["f_name"]} , uname={details["uname"]}, l_name={details["l_name"]}, g_name={details["g_name"]}'}
-        print(extra_var)
+        details['description'] = "User Account has been Created"
+        details['description_failure'] = "Issue in Creating User account on Active Directory"
     if details['type'] == "group_addtion":
+        details['description'] = "Group has been added to the user account"
+        details['description_failure'] = "Issue in adding user account to Group "
         play_source = group_addtion_touser(details)
 
     context.CLIARGS = ImmutableDict(listtags=False, listtasks=False, listhosts=False, forks=100,private_key_file=None, ssh_common_args=None, ssh_extra_args=None, sftp_extra_args=None, scp_extra_args=None, become=False, become_method='sudo', become_user='root', verbosity=0, check=False, diff=False, extra_vars=extra_var,  module_path='run_ansible_playbook.py', syntax=False, connection='ssh')
