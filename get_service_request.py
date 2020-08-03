@@ -30,17 +30,22 @@ def run():
         # Calling the get_user_details method to get
         # the user input values by passing the options
         # variable, which contains the Vairables Sysid
-        user_details = snow.get_user_details(options)
+        #print(request['short_description'])
+        if request['short_description'] == 'Group Addition':
+            groupadd = snow.get_groupadd_details(options)
+            print(groupadd)
+        else:
+            user_details = snow.get_user_details(options)
         # user_details is a dict , which stores the variables from
         # Request Item and we will also store the data which needed
         # actioned the request
         #
         # Below we are creating request key to tell the ansible
         # task executor that particular data came from Request ITEM
-        user_details['request'] = True
+            user_details['request'] = True
         # By calling method get_ritmNumber() by passing the ritm sysid to get the RITM Number
-        user_details['request_number'] = snow.get_ritmNumber(request['request_item']['value'])
-        user_details['sc_tasks'] = sc_tasks
+            user_details['request_number'] = snow.get_ritmNumber(request['request_item']['value'])
+            user_details['sc_tasks'] = sc_tasks
         # Calling the run_ansible_playbook() method by passing the above details
         run_ansible_playbook.run_ansible_playbook(user_details)
 

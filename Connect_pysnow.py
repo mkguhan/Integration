@@ -180,6 +180,29 @@ class ServiceNow_Connection():
         except:
             print("Issue Getting the Variables for request item")
 
+    def get_groupadd_details(self, options):
+        try:
+            group = {'uname' :'', 'group': '', 'type':'group_addtion', 'incident':False}
+            option_resource = self.get_options_resource()
+            for i in range(0, len(options)):
+                option_detail = option_resource.get(query={'sys_id': options[i]})
+                for det in option_detail.all():
+                   if int(det['order']) == 1:
+                       group['uname'] = det['value']
+                if int(det['order']) == 2:
+                    group_resource = self.get_groupResource()
+                    groups = det['value']
+                    groups = groups.split(',')
+                    name = []
+                    for i in range(0, len(groups)):
+                        group_name = group_resource.get(query={'sys_id': groups[i]})
+                        for g_name in group_name.all():
+                            name.append(g_name['name'])
+                    group['group'] = name
+            return group
+        except:
+            print("Issue Getting the groupadd details for request item")
+
 
     def get_ritmNumber(self, sys_id):
         try:
