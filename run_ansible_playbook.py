@@ -87,7 +87,7 @@ def group_addtion_touser(details):
         hosts="midserver1",
         gather_facts='no',
         tasks=[
-            dict(action=dict(module='win_domain_user', args=dict(name=details['uname'], groups=details['group'], groups_action="add" , domain_username="Labicc.com\guhan" , domain_password="Aadhav@0618", domain_server="DEC003110", state="present")))
+            dict(action=dict(module='win_domain_user', args=dict(name=details['uname'], groups=details['group'], groups_action="add" ,password='xAsdfeG@0618', domain_username="Labicc.com\guhan" , domain_password="Aadhav@0618", domain_server="DEC003110", state="present")))
         ]
     )
     return play_source
