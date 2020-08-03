@@ -41,10 +41,10 @@ def run():
         #
         # Below we are creating request key to tell the ansible
         # task executor that particular data came from Request ITEM
-            details_play['request'] = True
+        details_play['request'] = True
         # By calling method get_ritmNumber() by passing the ritm sysid to get the RITM Number
-            details_play['request_number'] = snow.get_ritmNumber(request['request_item']['value'])
-            details_play['sc_tasks'] = sc_tasks
+        details_play['request_number'] = snow.get_ritmNumber(request['request_item']['value'])
+        details_play['sc_tasks'] = sc_tasks
         # Calling the run_ansible_playbook() method by passing the above details
         run_ansible_playbook.run_ansible_playbook(details_play)
 
