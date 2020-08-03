@@ -221,9 +221,9 @@ class ServiceNow_Connection():
             request_number = details['request_number']
             sc_task = details['sc_tasks']
             if int(state) == 3:
-                description = "User Account has been Created"
+                description = details['description']
             else:
-                description = "Issue Creating User Account"
+                description = details['description_failure']
             payload = {
                 'state': f'{state}',
                 'comments': f'{description}'
