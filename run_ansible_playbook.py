@@ -64,6 +64,7 @@ def service_play_source(details):
                     name = "Ansible Play",
                     hosts = details['server_name'],
                     gather_facts = 'no',
+        # adding tasks as list of dictionary and passing it to Play() method
                     tasks = [
                         dict(action=dict(module='service', args=dict(name='{{service_name}}', state="started"))),
                      ]
@@ -75,6 +76,7 @@ def AD_user_accountCreation(details):
         name="Create User Account",
         hosts="midserver1",
         gather_facts='no',
+        # adding tasks as list of dictionary and passing it to Play() method
         tasks=[
             dict(action=dict(module='win_domain_user', args=dict(firstname=details['f_name'], name=details['uname'], password='xAsdfeG@0618', surname=details['l_name'] , groups=details['g_name'], domain_username="Labicc.com\guhan" , domain_password="Aadhav@0618", domain_server="DEC003110", state="present")))
         ]
@@ -86,6 +88,7 @@ def group_addtion_touser(details):
         name="Create User Account",
         hosts="midserver1",
         gather_facts='no',
+        # adding tasks as list of dictionary and passing it to Play() method
         tasks=[
             dict(action=dict(module='win_domain_user', args=dict(name=details['uname'], groups=details['group'], groups_action="add" ,password='xAsdfeG@0618', domain_username="Labicc.com\guhan" , domain_password="Aadhav@0618", domain_server="DEC003110", state="present")))
         ]
